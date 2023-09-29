@@ -16,11 +16,11 @@ class MaskImageDataset:
             self.load_dataset(from_file)
             return
         # Load some images
-        self.images = self.load_images()[:10]
+        self.images = self.load_images()
         # Add masks to images
         self.masked_images = torch.cat(
             [self.mask_image(image).unsqueeze(0) for image in self.images]
-            , dim=0)[:10]
+            , dim=0)
 
     def load_images(self) -> torch.Tensor:
         """
