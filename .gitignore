@@ -1,2 +1,3 @@
 opennotebook.cmd
 __pycache__
+datasets/*

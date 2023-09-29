@@ -1,8 +1,8 @@
 import torch.nn as nn
 
-class SimpleAE(nn.Module):
+class CurrentModel(nn.Module):
     def __init__(self):
-        super(SimpleAE, self).__init__()
+        super(CurrentModel, self).__init__()
         self.conv_layer = nn.Sequential(
             nn.Conv2d(3, 32, (3,3), (1,1), 1),
             nn.ReLU(),
