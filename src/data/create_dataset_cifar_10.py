@@ -32,5 +32,5 @@ class CIFAR10Masked(MaskImageDataset):
 
 if __name__ == "__main__":
     cifar10_test = CIFAR10Masked()
-    cifar10_test.save_dataset(filename="..\..\datasets\cifar10.pt")
+    cifar10_test.save_dataset(filename="cifar10.pt")
     print("CIFAR10 dataset is created and saved in datasets\cifar10.pt")

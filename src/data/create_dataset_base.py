@@ -1,10 +1,15 @@
 import torch
 from torch.utils.data import DataLoader, TensorDataset, random_split
+import pathlib
+import os
+script_path = pathlib.Path(__file__).parent.resolve()
 
 class MaskImageDataset:
     """
     Basic class to download clean images and generate masks.
     """
+
+    output_dir = os.path.join(script_path, "..\..\datasets")
 
     def __init__(self, from_file=None):
         """
@@ -53,13 +58,13 @@ class MaskImageDataset:
         torch.save({
             "images": self.images,
             "masked_images": self.masked_images
-        }, filename)
+        }, os.path.join(MaskImageDataset.output_dir, filename))
 
     def load_dataset(self, filename="dataset.pt"):
         """
         Load a dataset from a file.
         """
-        dataset = torch.load(filename)
+        dataset = torch.load(os.path.join(MaskImageDataset.output_dir, filename))
         self.images = dataset["images"]
         self.masked_images = dataset["masked_images"]
 
