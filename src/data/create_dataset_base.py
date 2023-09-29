@@ -9,7 +9,7 @@ class MaskImageDataset:
     Basic class to download clean images and generate masks.
     """
 
-    output_dir = os.path.join(script_path, "..\..\datasets")
+    output_dir = os.path.join(script_path, "..\\..\\datasets")
 
     def __init__(self, from_file=None):
         """
