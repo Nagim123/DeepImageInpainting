@@ -4,12 +4,14 @@ import torch
 from data.create_dataset_base import MaskImageDataset
 from models.loss_functions.bce_loss import bce_loss
 from models.model import CurrentModel
+from tqdm import tqdm
 
 def train_one_epoch(model, train_loader, loss_fn, optimizer):
     model.train()
     running_loss = 0.0
     total = 0
-    for i, batch in enumerate(train_loader):
+    progress = tqdm(enumerate(train_loader), total=len(train_loader))
+    for i, batch in progress:
         input, target = batch
         total += input.shape[0]
         optimizer.zero_grad()
@@ -18,6 +20,7 @@ def train_one_epoch(model, train_loader, loss_fn, optimizer):
         loss.backward()
         running_loss += loss.item()
         optimizer.step()
+        progress.set_postfix({"loss": loss.item()})
     return running_loss / total
 
 loss_functions = {
@@ -43,4 +46,5 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters())
 
     for epoch in range(epochs):
-        train_one_epoch(model, train_loader, loss_fn, optimizer)
+        total_loss = train_one_epoch(model, train_loader, loss_fn, optimizer)
+        print(f"Epoch {epoch} loss:{total_loss}")

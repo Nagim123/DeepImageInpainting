@@ -21,7 +21,7 @@ class CurrentModel(nn.Module):
             nn.ConvTranspose2d(32, 16, (2,2), (2,2)),
             nn.ReLU(),
             nn.ConvTranspose2d(16, 3, (2,2), (2,2)),
-            nn.ReLU(),
+            nn.Sigmoid(),
         )
 
     def forward(self, x):
