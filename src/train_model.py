@@ -16,7 +16,7 @@ def train_one_epoch(model, train_loader, loss_fn, optimizer):
     progress = tqdm(enumerate(train_loader), total=len(train_loader))
     for i, batch in progress:
         input, target = batch
-        total += input.shape[0]
+        total += 1
         optimizer.zero_grad()
         reconstruction = model(input)
         loss = loss_fn(reconstruction, target)
