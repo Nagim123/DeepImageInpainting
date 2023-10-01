@@ -21,7 +21,7 @@ if __name__ == "__main__":
     model.eval()
     with torch.no_grad():
         model.load_state_dict(torch.load(path_to_weights))
-        input = dataset.get_masked_image(args.image_index).unsqueeze(0)
+        input = dataset.get_image_val(args.image_index).unsqueeze(0)
         output = model(input)
         matrix = output[0].permute((1, 2, 0)).numpy()
         image = Image.fromarray((matrix*255).astype(np.uint8))
