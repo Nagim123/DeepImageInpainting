@@ -9,7 +9,7 @@ script_path = pathlib.Path(__file__).parent.resolve()
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
     parser.add_argument("dataset", type=str)
-    parser.add_argument("is_masked", type=bool)
+    parser.add_argument("--masked", action='store_true')
     parser.add_argument("--image_index", type=int)
     args = parser.parse_args()
     dataset = MaskImageDataset(from_file=args.dataset)
@@ -19,7 +19,7 @@ if __name__ == "__main__":
         row_matrix1 = []
         row_matrix2 = []
         for i in range(10):
-            if args.is_masked:
+            if args.masked:
                 matrix = dataset.get_masked_image(i)
             else:
                 matrix = dataset.get_image(i)
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         image = Image.fromarray((full_matrix*255).astype(np.uint8))
         image.save(os.path.join(script_path, "temp/temp.png"))
     else:
-        if args.is_masked:
+        if args.masked:
             matrix = dataset.get_masked_image(args.image_index)
         else:
             matrix = dataset.get_image(args.image_index)
