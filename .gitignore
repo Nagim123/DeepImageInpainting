@@ -2,3 +2,4 @@ opennotebook.cmd
 __pycache__
 datasets/*
 src/data/temp/*
+!src/data/temp/.gitkeep
