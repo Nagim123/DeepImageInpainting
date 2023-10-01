@@ -3,6 +3,7 @@ from create_dataset_base import MaskImageDataset
 import argparse
 import pathlib
 import os
+import numpy as np
 script_path = pathlib.Path(__file__).parent.resolve()
 
 if __name__ == "__main__":
@@ -13,12 +14,32 @@ if __name__ == "__main__":
     args = parser.parse_args()
     dataset = MaskImageDataset(from_file=args.dataset)
     if args.image_index is None:
-        pass
+        # Ten images by default
+        # First row
+        row_matrix1 = []
+        row_matrix2 = []
+        for i in range(10):
+            if args.is_masked:
+                matrix = dataset.get_masked_image(i)
+            else:
+                matrix = dataset.get_image(i)
+            matrix = matrix.permute((1, 2, 0)).numpy()
+            if i < 5:
+                row_matrix1.append(matrix)
+            else:
+                row_matrix2.append(matrix)
+        row_matrix1 = np.concatenate(row_matrix1, axis=1)
+        row_matrix2 = np.concatenate(row_matrix2, axis=1)
+        full_matrix = np.concatenate((row_matrix1, row_matrix2), axis=0)
+        image = Image.fromarray((full_matrix*255).astype(np.uint8))
+        image.save(os.path.join(script_path, "temp/temp.png"))
     else:
         if args.is_masked:
-            image = Image.fromarray(dataset.get_masked_image(args.image_index).permute((1, 2, 0)))
+            matrix = dataset.get_masked_image(args.image_index)
         else:
-            image = Image.fromarray(dataset.get_image(args.image_index).permute((1, 2, 0)))
+            matrix = dataset.get_image(args.image_index)
+        matrix = matrix.permute((1, 2, 0)).numpy()
+        image = Image.fromarray((matrix*255).astype(np.uint8))
         image.save(os.path.join(script_path, "temp/temp.png"))
     
     print("Saved to temp/temp.png!")

@@ -1,3 +1,4 @@
 opennotebook.cmd
 __pycache__
 datasets/*
+src/data/temp/*
