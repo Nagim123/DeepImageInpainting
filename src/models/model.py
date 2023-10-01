@@ -17,7 +17,7 @@ class CurrentModel(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d((2,2)),
         )
-        self.deconv_layer == nn.Sequential(
+        self.deconv_layer = nn.Sequential(
             nn.ConvTranspose2d(256, 128, (2,2), (2,2), "same"),
             nn.ReLU(),
             nn.ConvTranspose2d(128, 64, (2,2), (2,2), "same"),
