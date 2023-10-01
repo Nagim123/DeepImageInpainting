@@ -1,6 +1,9 @@
-import matplotlib.pyplot as plt
+from PIL import Image
 from create_dataset_base import MaskImageDataset
 import argparse
+import pathlib
+import os
+script_path = pathlib.Path(__file__).parent.resolve()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
@@ -13,6 +16,9 @@ if __name__ == "__main__":
         pass
     else:
         if args.is_masked:
-            plt.imshow(dataset.get_masked_image(args.image_index).permute((1, 2, 0)))
+            image = Image.fromarray(dataset.get_masked_image(args.image_index).permute((1, 2, 0)))
         else:
-            plt.imshow(dataset.get_image(args.image_index).permute((1, 2, 0)))
+            image = Image.fromarray(dataset.get_image(args.image_index).permute((1, 2, 0)))
+        image.save(os.path.join(script_path, "temp/temp.png"))
+    
+    print("Saved to temp/temp.png!")
