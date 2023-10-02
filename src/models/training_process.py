@@ -31,24 +31,25 @@ def train_one_epoch_with_discriminator(generator, discriminator, train_loader, l
         total += 1
 
         # Training Discriminator
+        opt_disc.zero_grad()
         disc_real = discriminator(target).reshape(-1)
         loss_disc_real = loss_fn(disc_real, torch.ones_like(disc_real))
-        disc_fake = discriminator(fake).reshape(-1)
+        disc_fake = discriminator(fake.detach()).reshape(-1)
         loss_disc_fake = loss_fn(disc_fake, torch.zeros_like(disc_fake))
         loss_disc = (loss_disc_real + loss_disc_fake) / 2
 
-        discriminator.zero_grad()
-        loss_disc.backward(retain_graph=True)
+        
+        loss_disc.backward()
         opt_disc.step()
 
         # Training Generator
+        opt_gen.zero_grad()
         output = discriminator(fake).reshape(-1)
         loss_gen = loss_fn(output, torch.ones_like(output))
-        generator.zero_grad()
         loss_gen.backward()
         opt_gen.step()
         running_loss += loss_gen.item()
-        progress.set_postfix({"loss": loss_gen.item()})
+        progress.set_postfix({"gen_loss": loss_gen.item(), "dicr_loss": loss_disc.item()})
 
     return running_loss / total
 
