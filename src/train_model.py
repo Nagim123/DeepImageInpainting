@@ -51,7 +51,7 @@ if __name__ == "__main__":
     
     # Loading Discriminator model (if required)
     if args.GAN_model:
-        discriminator, discriminator_save_path = load_model(args.model_name, args.weights, CurrentDiscriminatorModel)
+        discriminator, discriminator_save_path = load_model(args.GAN_model, args.weights, CurrentDiscriminatorModel)
         disc_optimizer = torch.optim.Adam(discriminator.parameters())
 
     train_loader, val_loader = MaskImageDataset(from_file=args.dataset).pack_to_dataloaders(batch_size=32)
