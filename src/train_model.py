@@ -5,18 +5,19 @@ import logging
 from data.create_dataset_base import MaskImageDataset
 from models.loss_functions.bce_loss import bce_loss
 from models.model import CurrentModel
+from models.discriminator_model import CurrentDiscriminatorModel
 from models.training_process import train_one_epoch, train_one_epoch_with_discriminator, val_one_epoch
 import pathlib
 import os
 script_path = pathlib.Path(__file__).parent.resolve()
 
-def load_model(model_name: str, require_weights: bool):
+def load_model(model_name: str, require_weights: bool, default_variant):
     path_to_model = os.path.join(script_path, f"models/checkpoints/{model_name}.pt")
     path_to_weights = os.path.join(script_path, f"models/checkpoints/{model_name}.pth")
 
     if not os.path.exists(path_to_model):
         logging.warn(f"Model {model_name} is not enough. Training current one from scratch!")
-        model = CurrentModel()
+        model = default_variant()
         model_scripted = torch.jit.script(model)
         model_scripted.save(path_to_model)
     else:
@@ -46,11 +47,11 @@ if __name__ == "__main__":
     
 
     # Loading Generator model
-    model, model_weights_save_path = load_model(args.model_name, args.weights)
+    model, model_weights_save_path = load_model(args.model_name, args.weights, CurrentModel)
     
     # Loading Discriminator model (if required)
     if args.GAN_model:
-        discriminator = load_model(args.model_name, args.weights)
+        discriminator, discriminator_save_path = load_model(args.model_name, args.weights, CurrentDiscriminatorModel)
         disc_optimizer = torch.optim.Adam(model.parameters())
 
     train_loader, val_loader = MaskImageDataset(from_file=args.dataset).pack_to_dataloaders(batch_size=32)
@@ -68,4 +69,6 @@ if __name__ == "__main__":
             best_loss = train_loss
             logging.info("New best loss. Checkpoint is saved!")
             torch.save(model.state_dict(), model_weights_save_path)
+            if args.GAN_model:
+                torch.save(discriminator.state_dict(), discriminator_save_path)
         print(f"Epoch {epoch} train_loss:{train_loss}, val_loss:{val_loss}")

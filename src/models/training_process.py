@@ -42,8 +42,8 @@ def train_one_epoch_with_discriminator(generator, discriminator, train_loader, l
         opt_disc.step()
 
         # Training Generator
-        ouput = disc_fake(fake).reshape(-1)
-        loss_gen = loss_fn(ouput, torch.ones_like(ouput))
+        output = discriminator(fake).reshape(-1)
+        loss_gen = loss_fn(output, torch.ones_like(output))
         generator.zero_grad()
         loss_gen.backward()
         opt_gen.step()
