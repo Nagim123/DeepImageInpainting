@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-class CurrentDiscriminatorModel():
+class CurrentDiscriminatorModel(nn.Module):
     def __init__(self):
         super(CurrentDiscriminatorModel, self).__init__()
         self.conv_layer = nn.Sequential(
