@@ -65,8 +65,8 @@ if __name__ == "__main__":
         else:
             train_loss = train_one_epoch(model, train_loader, loss_fn, optimizer)
         val_loss = val_one_epoch(model, val_loader, loss_fn)
-        if train_loss < best_loss:
-            best_loss = train_loss
+        if val_loss < best_loss:
+            best_loss = val_loss
             logging.info("New best loss. Checkpoint is saved!")
             torch.save(model.state_dict(), model_weights_save_path)
             if args.GAN_model:
