@@ -55,7 +55,7 @@ def train_one_epoch_with_discriminator(generator, discriminator, train_loader, l
 
     return running_loss / total
 
-def val_one_epoch(model, val_loader, loss_fn):
+def val_one_epoch(model, val_loader, loss_fn, device):
     with torch.no_grad():
         model.eval()
         running_loss = 0.0
@@ -63,8 +63,10 @@ def val_one_epoch(model, val_loader, loss_fn):
         progress = tqdm(enumerate(val_loader), total=len(val_loader))
         for i, batch in progress:
             input, target = batch
+            input, target = input.to(device), target.to(device)
+
             total += 1
-            reconstruction = model(input)
+            reconstruction = model(input).to(device)
             loss = loss_fn(reconstruction, target)
             running_loss += loss.item()
             progress.set_postfix({"e_loss": loss.item()})
