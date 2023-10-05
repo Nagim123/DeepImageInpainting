@@ -45,14 +45,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
     epochs = args.epochs
     
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # Loading Generator model
     model, model_weights_save_path = load_model(args.model_name, args.weights, CurrentModel)
-    
+    model = model.to(device)
+
     # Loading Discriminator model (if required)
     if args.GAN_model:
         discriminator, discriminator_save_path = load_model(args.GAN_model, args.weights, CurrentDiscriminatorModel)
         disc_optimizer = torch.optim.Adam(discriminator.parameters())
+        discriminator = discriminator.to(device)
 
     train_loader, val_loader = MaskImageDataset(from_file=args.dataset).pack_to_dataloaders(batch_size=32)
     loss_fn = loss_functions[args.loss]()
@@ -61,10 +64,10 @@ if __name__ == "__main__":
     best_loss = 1e9
     for epoch in range(epochs):
         if args.GAN_model:
-            train_loss = train_one_epoch_with_discriminator(model, discriminator, train_loader, loss_fn, optimizer, disc_optimizer)
+            train_loss = train_one_epoch_with_discriminator(model, discriminator, train_loader, loss_fn, optimizer, disc_optimizer, device)
         else:
-            train_loss = train_one_epoch(model, train_loader, loss_fn, optimizer)
-        val_loss = val_one_epoch(model, val_loader, loss_fn)
+            train_loss = train_one_epoch(model, train_loader, loss_fn, optimizer, device)
+        val_loss = val_one_epoch(model, val_loader, loss_fn, device)
         if val_loss < best_loss:
             best_loss = val_loss
             logging.info("New best loss. Checkpoint is saved!")
