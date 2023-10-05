@@ -32,7 +32,7 @@ class CurrentModel(nn.Module):
     def forward(self, x):
         # x - shape[B, C, H, W]
         x = self.encode_layer(x)
-        x = x.view(-1, 2048)
+        x = x.view(-1, 4096)
         x = self.hidden_layer(x)
         x = x.view(-1, 512, 2, 2)
         x = self.decode_layer(x)
