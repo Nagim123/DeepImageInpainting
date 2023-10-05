@@ -4,6 +4,7 @@ import torch
 import logging
 from data.create_dataset_base import MaskImageDataset
 from models.loss_functions.bce_loss import bce_loss
+from models.loss_functions.mean_square_error import mse_loss
 from models.model import CurrentModel
 from models.discriminator_model import CurrentDiscriminatorModel
 from models.training_process import train_one_epoch, train_one_epoch_with_discriminator, val_one_epoch
@@ -31,6 +32,7 @@ def load_model(model_name: str, require_weights: bool, default_variant):
 
 loss_functions = {
     "BCELoss": bce_loss,
+    "MSELoss": mse_loss,
 }
 
 if __name__ == "__main__":
