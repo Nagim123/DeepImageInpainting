@@ -20,12 +20,15 @@ class CurrentModel(nn.Module):
         self.hidden_layer = nn.Linear(4096, 2048)
         self.decode_layer = nn.Sequential(
             nn.ConvTranspose2d(512, 256, (4,4), (2,2), (1,1)),
-            nn.BatchNorm2d(32),
+            nn.BatchNorm2d(256),
             nn.ReLU(),
             nn.ConvTranspose2d(256, 64, (4,4), (2,2), (1,1)),
-            nn.BatchNorm2d(16),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.ConvTranspose2d(64, 3, (4,4), (2,2), (1,1)),
+            nn.ConvTranspose2d(64, 32, (4,4), (2,2), (1,1)),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+            nn.ConvTranspose2d(32, 3, (4,4), (2,2), (1,1)),
             nn.Sigmoid(),
         )
 
