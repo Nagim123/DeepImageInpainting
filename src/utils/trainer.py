@@ -10,7 +10,7 @@ class Trainer:
     Class for training image inpainting models.
     """
 
-    def __init__(self, model: torch.Module, train_loader: DataLoader, val_loader: DataLoader, loss_fn, optimizer: Optimizer, device: str) -> None:
+    def __init__(self, model: torch.nn.Module, train_loader: DataLoader, val_loader: DataLoader, loss_fn, optimizer: Optimizer, device: str) -> None:
         """
         Creates trainer.
 
