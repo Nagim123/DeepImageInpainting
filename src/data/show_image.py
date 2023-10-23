@@ -13,16 +13,14 @@ if __name__ == "__main__":
     parser.add_argument("--image_index", type=int)
     args = parser.parse_args()
     dataset = MaskImageDataset(from_file=args.dataset)
+    
     if args.image_index is None:
         # Ten images by default
         # First row
         row_matrix1 = []
         row_matrix2 = []
         for i in range(10):
-            if args.masked:
-                matrix = dataset.get_masked_image(i)
-            else:
-                matrix = dataset.get_image(i)
+            matrix = dataset.get_masked_image(i) if args.masked else dataset.get_image(i)
             matrix = matrix.permute((1, 2, 0)).numpy()
             if i < 5:
                 row_matrix1.append(matrix)
@@ -34,10 +32,7 @@ if __name__ == "__main__":
         image = Image.fromarray((full_matrix*255).astype(np.uint8))
         image.save(os.path.join(script_path, "temp/temp.png"))
     else:
-        if args.masked:
-            matrix = dataset.get_masked_image(args.image_index)
-        else:
-            matrix = dataset.get_image(args.image_index)
+        matrix = dataset.get_masked_image(args.image_index) if args.masked else dataset.get_image(args.image_index)
         matrix = matrix.permute((1, 2, 0)).numpy()
         image = Image.fromarray((matrix*255).astype(np.uint8))
         image.save(os.path.join(script_path, "temp/temp.png"))
