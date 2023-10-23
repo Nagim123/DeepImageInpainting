@@ -23,7 +23,7 @@ class STL10Masked(MaskImageDataset):
         # Generate random top-left coordinates.
         x1, y1 = np.random.randint(0, 26, size=2)
         # Generate random bottom-right coordinates
-        min_w, min_h, max_w, max_h = 10, 10, 27, 27
+        min_w, min_h, max_w, max_h = 10, 10, 90, 90
         x2 = np.random.randint(min(x1+min_w,96), min(x1+max_w,96))
         y2 = np.random.randint(min(y1+min_h,96), min(y1+max_h,96))
         # Copy original image
