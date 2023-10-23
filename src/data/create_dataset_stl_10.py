@@ -21,7 +21,7 @@ class STL10Masked(MaskImageDataset):
     def mask_image(self, image: torch.Tensor) -> np.array:
         image = image.permute((1, 2, 0))
         # Generate random top-left coordinates.
-        x1, y1 = np.random.randint(0, 26, size=2)
+        x1, y1 = np.random.randint(0, 95, size=2)
         # Generate random bottom-right coordinates
         min_w, min_h, max_w, max_h = 10, 10, 90, 90
         x2 = np.random.randint(min(x1+min_w,96), min(x1+max_w,96))
