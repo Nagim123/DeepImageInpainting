@@ -2,25 +2,23 @@ import os
 import torch
 from .constants import PATH_TO_MODELS
 
-def load_model(model_name: str, require_weights: bool) -> torch.Module:
+def load_model(path_to_model: str, path_to_weights: str = None) -> torch.Module:
     """
     Loads model from torch script file.
 
     Parameters:
-        model_name (str): Name of model to load.
-        require_weights (bool): If true, then load weights to model.
+        path_to_model (str): Path to serialized model.
+        path_to_weights (str): Path to weights of model (OPTIONAL).
 
     Returns:
         Module: Torch model.
     """
-    path_to_model = os.path.join(PATH_TO_MODELS, model_name + ".pt")
-    path_to_weights = os.path.join(PATH_TO_MODELS, model_name + ".pth")
 
     if not os.path.exists(path_to_model):
-        raise Exception(f"Model {model_name} is not found!")
+        raise Exception(f"Model is not found!")
     else:
         model = torch.jit.load(path_to_model)
-        if require_weights:
+        if not path_to_weights is None:
             if not os.path.exists(path_to_weights):
                 raise Exception("Model is loaded but weights not found!")
             model.load_state_dict(torch.load(path_to_weights))
