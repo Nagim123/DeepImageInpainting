@@ -4,7 +4,7 @@ A project to solve the Image Inpainting problem using generative deep neural net
 You can try our current models on collab.
 1. [Vanilla AE](https://colab.research.google.com/drive/1ApWMUxXFhksdLbjA5b-s3QTS4_3HkgM8?usp=sharing)
 2. Pixel CNN (Not working right now)
-3. Unet
+3. [Unet](https://colab.research.google.com/drive/1lJDoIicTpp9nR_8kCOgljNYpAiKmqnvP?usp=sharing)
 ## Results so far
 * Vanilla AE <br/>
   ![img](https://lh7-us.googleusercontent.com/H2WlLnSjqd883zxG9cVAEpq6owVMtMrjbWVRCpP4Sji2Lgvl7tIS_8jqJBxK1ROZoI1JCCcy_8jkzzAcju82wHu2V9vKe6tWMeUaLtuTMZYrVRJ6luA4zwB5iHHn6bCmZIYb-3nQeZh8urcxKX1-Qw)
