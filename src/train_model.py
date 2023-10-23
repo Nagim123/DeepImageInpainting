@@ -1,11 +1,11 @@
 
 import argparse
 import torch
-import os
 from data.create_dataset_base import MaskImageDataset
 from torch.nn import BCELoss, MSELoss
 from utils.trainer import Trainer
 from utils.model_loader import load_model
+from utils.constants import PATH_TO_MODELS
 
 if __name__ == "__main__":
     
@@ -39,4 +39,4 @@ if __name__ == "__main__":
 
     # Initialize trainer and start training
     trainer = Trainer(model, train_loader, val_loader, loss_fn, optimizer, device)
-    trainer.train(args.epochs, os.path.join())
+    trainer.train(args.epochs, PATH_TO_MODELS)
