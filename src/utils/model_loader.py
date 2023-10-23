@@ -2,7 +2,7 @@ import os
 import torch
 from .constants import PATH_TO_MODELS
 
-def load_model(path_to_model: str, path_to_weights: str = None) -> torch.Module:
+def load_model(path_to_model: str, path_to_weights: str = None) -> torch.nn.Module:
     """
     Loads model from torch script file.
 
