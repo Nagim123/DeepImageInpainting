@@ -21,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument("dataset", type=str)
     parser.add_argument("epochs", type=int)
     parser.add_argument("loss", choices=list(loss_functions.keys()))
-    parser.add_argument("--weights", action='store_true')
+    parser.add_argument("--weights", type=str)
     args = parser.parse_args()
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
