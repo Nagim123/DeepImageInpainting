@@ -36,5 +36,5 @@ class STL10Masked(MaskImageDataset):
 
 if __name__ == "__main__":
     stl10_dataset = STL10Masked()
-    stl10_dataset.save_dataset(filename="cifar10.pt")
+    stl10_dataset.save_dataset(filename="stl10.pt")
     print("CIFAR10 dataset is created and saved in datasets\cifar10.pt")
