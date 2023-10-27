@@ -14,3 +14,5 @@ You can try our current models on collab.
 
 * UNet <br/>
   ![img](https://lh7-us.googleusercontent.com/EU_ztXX8Lyrl0xGUVJd8gdlt71Sox6gfkpqVX43dbF11wl6r2PhDLky0RP3gq7T22EDLqFVPfRN1y7O_qRTKmPNTl24q9iS5ufR8z9sPvJQMYWgvhAGOGVUkvQQHSMiGo7zygG0lepYa1fr_CwrliA)
+* We also tried some open-source models. The most successfull example found so far is [Inpaint-Anything](https://github.com/geekyutao/Inpaint-Anything/tree/main). It combines an inpainting model and Meta's SAM model for segmenting objects <br/>
+![img](https://gcdnb.pbrd.co/images/ORKe8k1DSuY2.png?o=1)
