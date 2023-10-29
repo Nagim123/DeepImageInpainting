@@ -32,7 +32,7 @@ if __name__ == "__main__":
     model = load_model(args.model_name, args.weights)
     model.eval()
     with torch.no_grad():
-        output = model(input)
+        output = model(input, do_inference=True)
         matrix = output[0].permute((1, 2, 0)).numpy()
         image = Image.fromarray((matrix*255).astype(np.uint8))
         image.save("prediction.png")

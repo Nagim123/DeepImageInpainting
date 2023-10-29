@@ -25,7 +25,7 @@ class VanillaAE(nn.Module):
             nn.Sigmoid(),
         )
 
-    def forward(self, x):
+    def forward(self, x, do_inference: bool = False):
         # x - shape[B, C, H, W]
         x = self.encode_layer(x)
         x = x.view(-1, 2048)

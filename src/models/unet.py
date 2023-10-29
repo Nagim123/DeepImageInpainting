@@ -62,7 +62,7 @@ class downStep(nn.Module):
 
         self.maxpool = nn.MaxPool2d(2)
 
-    def forward(self, x):
+    def forward(self, x, do_inference: bool = False):
         # todo
         if not self.firstLayer:
             x = self.maxpool(x)

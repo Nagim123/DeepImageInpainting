@@ -30,8 +30,12 @@ class PixelCNN(nn.Module):
             nn.Conv2d(64, 768, 1),
         )
 
-    def forward(self, x):
+    def forward(self, x, do_inference: bool = False):
         # x - shape[B, C, H, W]
+        batch_size, channels, width, height = x.shape
         x = self.net(x)
         # net - shape [B, 768, H, W]
-        return x.reshape(-1, 256, 3, 32, 32)
+        x = x.reshape(batch_size, 256, channels, width, height)
+        if do_inference:
+            return torch.max(x, dim=1)[1].float()/255.0
+        return x
