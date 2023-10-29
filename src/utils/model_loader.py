@@ -1,4 +1,4 @@
-from ..models import vanilla_ae, unet, pixel_cnn
+from models import vanilla_ae, unet, pixel_cnn
 import os
 import torch
 
