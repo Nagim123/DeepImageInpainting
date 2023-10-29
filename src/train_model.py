@@ -4,7 +4,7 @@ import torch
 from data.create_dataset_base import MaskImageDataset
 from torch.nn import BCELoss, MSELoss
 from utils.trainer import Trainer
-from utils.model_loader import load_model
+from utils.model_loader import load_model, get_available_models
 from utils.constants import PATH_TO_MODELS
 
 if __name__ == "__main__":
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument("model_name", type=str)
+    parser.add_argument("model_name", choices=get_available_models())
     parser.add_argument("dataset", type=str)
     parser.add_argument("epochs", type=int)
     parser.add_argument("loss", choices=list(loss_functions.keys()))
