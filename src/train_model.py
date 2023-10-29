@@ -39,5 +39,5 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters())
 
     # Initialize trainer and start training
-    trainer = Trainer(model, train_loader, val_loader, loss_fn, optimizer, device)
+    trainer = Trainer(model, train_loader, val_loader, loss_fn, optimizer, device, keep_original=(args.loss == "CrossLoss"))
     trainer.train(args.epochs, PATH_TO_MODELS)

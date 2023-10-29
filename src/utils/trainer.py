@@ -10,7 +10,7 @@ class Trainer:
     Class for training image inpainting models.
     """
 
-    def __init__(self, model: torch.nn.Module, train_loader: DataLoader, val_loader: DataLoader, loss_fn, optimizer: Optimizer, device: str) -> None:
+    def __init__(self, model: torch.nn.Module, train_loader: DataLoader, val_loader: DataLoader, loss_fn, optimizer: Optimizer, device: str, keep_original: bool = False) -> None:
         """
         Creates trainer.
 
@@ -21,6 +21,7 @@ class Trainer:
             loss_fn (Function): Loss function.
             optimizer (Optimizer): Optimizer.
             device (str): Device to train on.
+            keep_original (bool): Keep pixels between [0..255]
         """
         self.model = model
         self.train_loader = train_loader
@@ -28,6 +29,7 @@ class Trainer:
         self.loss_fn = loss_fn
         self.optimizer = optimizer
         self.device = device
+        self.keep_original = keep_original
 
     def train_one_epoch(self) -> float:
         """
@@ -44,6 +46,10 @@ class Trainer:
         for batch in progress:
             input, target = batch
             input, target = input.to(self.device), target.to(self.device)
+            
+            if self.keep_original:
+                target = (target * 255).long()
+            
             total += 1
             self.optimizer.zero_grad()
             reconstruction = self.model(input).to(self.device)
@@ -70,6 +76,9 @@ class Trainer:
             for batch in progress:
                 input, target = batch
                 input, target = input.to(self.device), target.to(self.device)
+                
+                if self.keep_original:
+                    target = (target * 255).long()
 
                 total += 1
                 reconstruction = self.model(input).to(self.device)
