@@ -2,7 +2,7 @@
 import argparse
 import torch
 from data.create_dataset_base import MaskImageDataset
-from torch.nn import BCELoss, MSELoss
+from torch.nn import BCELoss, MSELoss, CrossEntropyLoss
 from utils.trainer import Trainer
 from utils.model_loader import load_model, get_available_models
 from utils.constants import PATH_TO_MODELS
@@ -13,6 +13,7 @@ if __name__ == "__main__":
     loss_functions = {
         "BCELoss": BCELoss(),
         "MSELoss": MSELoss(),
+        "CrossLoss": CrossEntropyLoss(),
     }
 
     # Parse command line arguments
