@@ -3,3 +3,4 @@ __pycache__
 datasets/*
 src/data/temp/*
 !src/data/temp/.gitkeep
+src/models/*

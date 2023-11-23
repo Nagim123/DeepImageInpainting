@@ -12,8 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("model_name", type=str)
     parser.add_argument("weights", type=str)
     parser.add_argument("--image_path", type=str)
-    parser.add_argument("--dataset", type=str)
-    parser.add_argument("--image_index", type=int)
+    parser.add_argument("--mask_image", type=str)
     args = parser.parse_args()
 
     # Check if user specify dataset or single image path
@@ -22,12 +21,16 @@ if __name__ == "__main__":
 
     # Get input depend on user arguments
     if args.image_path is None:
-        dataset = MaskImageDataset(from_file=args.dataset)
-        input = dataset.get_masked_image(args.image_index).unsqueeze(0)
-    else:
-        input = torch.tensor((np.asarray(Image.open(args.image_path).convert('RGB'))/255).astype(np.float32))
-        input = input.permute((2,0,1)).unsqueeze(0)
+        raise Exception("You must provide image for inference!")
+
+    image = torch.tensor((np.asarray(Image.open(args.image_path).convert('RGB'))/255).astype(np.float32))
+    image = input.permute((2,0,1)).unsqueeze(0)
+
+    mask = torch.tensor((np.asarray(Image.open(args.mask_image))/255).astype(np.float32))
+    mask = input.permute((2,0,1)).unsqueeze(0)
     
+    input = np.array([image, mask])
+
     # Do inference
     model = load_model(args.model_name, args.weights)
     model.eval()
