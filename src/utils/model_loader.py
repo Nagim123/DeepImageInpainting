@@ -12,7 +12,6 @@ def load_model(path_to_model: str, path_to_weights: str = None) -> torch.nn.Modu
     Returns:
         Module: Torch model.
     """
-
     if not os.path.exists(path_to_model):
         raise Exception(f"Model is not found!")
     else:
@@ -20,6 +19,6 @@ def load_model(path_to_model: str, path_to_weights: str = None) -> torch.nn.Modu
         if not path_to_weights is None:
             if not os.path.exists(path_to_weights):
                 raise Exception("Model is loaded but weights not found!")
-            model.load_state_dict(torch.load(path_to_weights))
+            model.load_state_dict(torch.load(path_to_weights, map_location="cpu"))
     
     return model

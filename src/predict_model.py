@@ -8,31 +8,39 @@ from PIL import Image
 if __name__ == "__main__":
     
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description="")
-    parser.add_argument("model_name", type=str)
-    parser.add_argument("weights", type=str)
+    parser = argparse.ArgumentParser(description="Script that run model's inference.")
+
+    parser.add_argument("--model_path", type=str)
     parser.add_argument("--image_path", type=str)
-    parser.add_argument("--mask_image", type=str)
+    parser.add_argument("--image_mask_path", type=str)
     args = parser.parse_args()
 
+    # Check if model's path specified by user
+    if args.model_path is None:
+        raise Exception("You must specify --model_path <path/to/model/directory>")
+
     # Check if user specify dataset or single image path
-    if args.image_path is None and args.dataset is None:
-        raise Exception("You must specify --image_path <path/to/image.png> or --dataset <name> --image_index <index>")
+    if args.image_path is None or args.image_mask_path is None:
+        raise Exception("You must specify --image_path <path/to/image.png> --image_mask_path <path/to/image_mask.png>")
 
     # Get input depend on user arguments
     if args.image_path is None:
         raise Exception("You must provide image for inference!")
 
+    # Read image
     image = torch.tensor((np.asarray(Image.open(args.image_path).convert('RGB'))/255).astype(np.float32))
-    image = input.permute((2,0,1)).unsqueeze(0)
+    image = image.permute((2,0,1)).unsqueeze(0)
 
-    mask = torch.tensor((np.asarray(Image.open(args.mask_image))/255).astype(np.float32))
-    mask = input.permute((2,0,1)).unsqueeze(0)
-    
-    input = np.array([image, mask])
+    # Read mask
+    mask = torch.tensor((np.asarray(Image.open(args.image_mask_path).convert('L'))/255).astype(np.float32))
+    mask = mask.unsqueeze(0).unsqueeze(0)
+
+    # Concatinate image with mask
+    input = torch.cat([image, mask], dim=1)
+    print(input.shape)
 
     # Do inference
-    model = load_model(args.model_name, args.weights)
+    model = load_model(f"{args.model_path}/unet_model.pt", f"{args.model_path}/unet_weights.pt")
     model.eval()
     with torch.no_grad():
         output = model(input)
