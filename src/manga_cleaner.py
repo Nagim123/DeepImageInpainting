@@ -5,8 +5,8 @@ import argparse
 print(script_path)
 
 TEMP_FOLDER_PATH = os.path.join(script_path, "../temp/")
-UNET_MODEL_PATH = os.path.join(script_path, "/models")
-MANGA_SEG_MODEL_PATH = os.path.join(script_path, "/models")
+UNET_MODEL_PATH = os.path.join(script_path, "models")
+MANGA_SEG_MODEL_PATH = os.path.join(script_path, "models/comictextdetector.pt")
 SEGMENT_SCRIPT_PATH = os.path.join(script_path, "comic-text-detector/run_model.py")
 PREDICT_SCRIPT_PATH = os.path.join(script_path, "predict_model.py")
 

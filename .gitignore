@@ -4,3 +4,5 @@ datasets/*
 src/data/temp/*
 !src/data/temp/.gitkeep
 src/models/*
+.venv/*
+temp/*
