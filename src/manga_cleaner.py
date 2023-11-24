@@ -2,7 +2,6 @@ import pathlib
 import os
 script_path = pathlib.Path(__file__).parent.resolve()
 import argparse
-print(script_path)
 
 TEMP_FOLDER_PATH = os.path.join(script_path, "../temp/")
 UNET_MODEL_PATH = os.path.join(script_path, "models/")
