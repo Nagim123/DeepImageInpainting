@@ -24,11 +24,11 @@ class ImageDisplayApp:
         self.root.bind('<B3-Motion>', lambda event: self.draw(event, 0))
         self.root.bind('<ButtonRelease-3>', self.stop_drawing)
         self.root.bind('<Control-Return>', self.save_mask)
+        self.root.bind('<MouseWheel>', self.change_drawing_size)
 
         self.drawing = False
         self.mask = None
-        self.start_x = None
-        self.start_y = None
+        self.pointer_size = 8
 
         self.show_image()
 
@@ -57,10 +57,16 @@ class ImageDisplayApp:
         if self.drawing and 0 <= event.x < self.current_image.shape[1] and 0 <= event.y < self.current_image.shape[0]:
             # Convert Tkinter coordinates to OpenCV coordinates
             x_cv = event.x
-            y_cv = event.y + 8
-
-            cv2.rectangle(self.mask, (x_cv - 8, y_cv - 8), (x_cv + 8, y_cv + 8), value, -1)
+            y_cv = event.y + self.pointer_size
+            d = self.pointer_size
+            cv2.rectangle(self.mask, (x_cv - d, y_cv - d), (x_cv + d, y_cv + d), value, -1)
             self.update_display()
+
+    def change_drawing_size(self, event):
+        delta = event.delta
+        # Increase or decrease the drawing size based on mouse wheel movement
+        self.pointer_size += int(delta / 120)
+        self.pointer_size = max(1, self.pointer_size)
 
     def stop_drawing(self, event):
         self.drawing = False
@@ -105,7 +111,7 @@ class ImageDisplayApp:
 
     def save_mask(self, event):
         if self.mask is not None:
-            self.mask = cv2.resize(self.mask, self.shape, interpolation=cv2.INTER_NEAREST)
+            self.mask = cv2.resize(self.mask, self.shape[1::-1], interpolation=cv2.INTER_NEAREST)
             image_name = self.image_list[self.current_image_index]
             mask_name = f"mask-{image_name}"
             mask_path = os.path.join(self.mask_directory, mask_name)
