@@ -3,6 +3,10 @@ import os
 import shutil
 script_path = pathlib.Path(__file__).parent.resolve()
 import argparse
+import cv2
+import numpy as np
+
+from display_images import appl
 
 TEMP_FOLDER_PATH = os.path.join(script_path, "../temp/")
 LAMA_CONFIG_PATH = os.path.join(script_path, "fixed-lama-inpainter/lama/configs/prediction/default.yaml")
@@ -12,8 +16,6 @@ SEGMENT_SCRIPT_PATH = os.path.join(script_path, "comic-text-detector/run_model.p
 PREDICT_SCRIPT_PATH = os.path.join(script_path, "fixed-lama-inpainter/lama_inpaint.py")
 OUTPUTS_PATH = os.path.join(script_path, "../outputs/")
 
-import cv2
-import numpy as np
 
 def dilate_rgb_mask(mask: np.array, kernel_size: int = 7) -> np.array:
     """
@@ -62,6 +64,7 @@ if __name__ == "__main__":
 
     # Run mask extractor
     os.system(f"python {SEGMENT_SCRIPT_PATH} --image_dir {args.manga_dir} --output_dir {TEMP_FOLDER_PATH} --model_path {MANGA_SEG_MODEL_PATH}")
+    appl(args.manga_dir, TEMP_FOLDER_PATH)
 
     for image_name in image_names:
         clean_name = image_name.split(".")[0]
@@ -89,6 +92,5 @@ if __name__ == "__main__":
         clean_name = image_name.split(".")[0]
         os.remove(os.path.join(TEMP_FOLDER_PATH, f"{clean_name}.txt"))
         os.remove(os.path.join(TEMP_FOLDER_PATH, f"line-{clean_name}.txt"))
-        
 
 
