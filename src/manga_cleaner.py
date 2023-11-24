@@ -46,6 +46,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script that clean manga from symbols")
 
     parser.add_argument("--manga_dir", type=str)
+    parser.add_argument("--line_width", type=int, default=7)
     args = parser.parse_args()
 
     # Check if directory with manga specified
@@ -68,17 +69,17 @@ if __name__ == "__main__":
         #output_path = os.path.join(OUTPUTS_PATH, image_name)
 
         masked_img = cv2.imread(path_to_mask)
-        masked_img = dilate_rgb_mask(masked_img, kernel_size=7)
+        masked_img = dilate_rgb_mask(masked_img, kernel_size=args.line_width)
         cv2.imwrite(path_to_mask, masked_img)
 
         # Run inpainting model        
         os.system(f"python {PREDICT_SCRIPT_PATH} --input_img {path_to_img} --input_mask_glob {path_to_mask} --lama_config {LAMA_CONFIG_PATH} --lama_ckpt {LAMA_MODEL_PATH} --output_dir {OUTPUTS_PATH}")
         
         # Remove temporary files
-        # os.remove(path_to_img)
-        # os.remove(path_to_mask)
-        # clean_name = image_name.split(".")[0]
-        # os.remove(os.path.join(TEMP_FOLDER_PATH, f"{clean_name}.txt"))
-        # os.remove(os.path.join(TEMP_FOLDER_PATH, f"line-{clean_name}.txt"))
+        os.remove(path_to_img)
+        os.remove(path_to_mask)
+        clean_name = image_name.split(".")[0]
+        os.remove(os.path.join(TEMP_FOLDER_PATH, f"{clean_name}.txt"))
+        os.remove(os.path.join(TEMP_FOLDER_PATH, f"line-{clean_name}.txt"))
 
 
