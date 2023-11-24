@@ -14,7 +14,10 @@ OUTPUTS_PATH = os.path.join(script_path, "../outputs/")
 import cv2
 import numpy as np
 
-def dilate_rgb_mask(mask, kernel_size=5):
+def dilate_rgb_mask(mask: np.array, kernel_size: int = 5) -> np.array:
+    """
+    
+    """
     # Separate the channels
     b, g, r = cv2.split(mask)
 
