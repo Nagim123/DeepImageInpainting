@@ -17,9 +17,12 @@ class ImageDisplayApp:
         self.photo_label.pack()
 
         self.root.bind('<Return>', self.change_image)
-        self.root.bind('<Button-1>', self.start_drawing)
-        self.root.bind('<B1-Motion>', self.draw)
+        self.root.bind('<Button-1>', self.start_drawing)  # Left mouse button
+        self.root.bind('<B1-Motion>', lambda event: self.draw(event, 255))
         self.root.bind('<ButtonRelease-1>', self.stop_drawing)
+        self.root.bind('<Button-3>', self.start_drawing)  # Right mouse button
+        self.root.bind('<B3-Motion>', lambda event: self.draw(event, 0))
+        self.root.bind('<ButtonRelease-3>', self.stop_drawing)
         self.root.bind('<Control-Return>', self.save_mask)
 
         self.drawing = False
@@ -49,16 +52,14 @@ class ImageDisplayApp:
 
     def start_drawing(self, event):
         self.drawing = True
-        self.start_x = event.x
-        self.start_y = event.y
 
-    def draw(self, event):
+    def draw(self, event, value):
         if self.drawing and 0 <= event.x < self.current_image.shape[1] and 0 <= event.y < self.current_image.shape[0]:
             # Convert Tkinter coordinates to OpenCV coordinates
-            x_cv = event.x + self.offsetw
-            y_cv = event.y + self.offseth + 8
+            x_cv = event.x
+            y_cv = event.y + 8
 
-            cv2.rectangle(self.mask, (x_cv - 8, y_cv - 8), (x_cv + 8, y_cv + 8), 255, -1)
+            cv2.rectangle(self.mask, (x_cv - 8, y_cv - 8), (x_cv + 8, y_cv + 8), value, -1)
             self.update_display()
 
     def stop_drawing(self, event):
@@ -77,13 +78,19 @@ class ImageDisplayApp:
             image_path = os.path.join(self.image_directory, image_name)
             self.current_image = cv2.imread(image_path)
             self.current_image = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2RGB)  # Convert from BGR to RGB
-            self.offseth = max((self.current_image.shape[0] - self.root.winfo_screenheight()) // 2, 0)
-            self.offsetw = max((self.current_image.shape[1] - self.root.winfo_screenwidth()) // 2, 0)
-            print(self.offseth, self.offsetw)
+            self.shape = self.current_image.shape[:2]
 
             self.mask = self.load_mask(image_name)
             if self.mask is None:
                 self.mask = np.zeros((self.current_image.shape[0], self.current_image.shape[1]), dtype=np.uint8)
+
+            ratio_h = self.current_image.shape[0] / self.root.winfo_screenheight()
+            ratio_w = self.current_image.shape[1] / self.root.winfo_screenwidth()
+            ratio = max(ratio_h, ratio_w)
+            h = int(self.current_image.shape[0] / ratio)
+            w = int(self.current_image.shape[1] / ratio)
+            self.current_image = cv2.resize(self.current_image, (w, h))
+            self.mask = cv2.resize(self.mask, (w, h), interpolation=cv2.INTER_NEAREST)
 
             self.update_display()
 
@@ -98,6 +105,7 @@ class ImageDisplayApp:
 
     def save_mask(self, event):
         if self.mask is not None:
+            self.mask = cv2.resize(self.mask, self.shape, interpolation=cv2.INTER_NEAREST)
             image_name = self.image_list[self.current_image_index]
             mask_name = f"mask-{image_name}"
             mask_path = os.path.join(self.mask_directory, mask_name)
