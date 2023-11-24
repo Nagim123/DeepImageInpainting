@@ -4,10 +4,11 @@ script_path = pathlib.Path(__file__).parent.resolve()
 import argparse
 
 TEMP_FOLDER_PATH = os.path.join(script_path, "../temp/")
-UNET_MODEL_PATH = os.path.join(script_path, "models/")
+LAMA_CONFIG_PATH = os.path.join(script_path, "fixed-lama-inpainter/lama/configs/prediction/default.yaml")
+LAMA_MODEL_PATH = os.path.join(script_path, "models/big-lama/")
 MANGA_SEG_MODEL_PATH = os.path.join(script_path, "models/comictextdetector.pt")
 SEGMENT_SCRIPT_PATH = os.path.join(script_path, "comic-text-detector/run_model.py")
-PREDICT_SCRIPT_PATH = os.path.join(script_path, "predict_model.py")
+PREDICT_SCRIPT_PATH = os.path.join(script_path, "fixed-lama-inpainter/lama_inpaint.py")
 OUTPUTS_PATH = os.path.join(script_path, "../outputs/")
 
 import cv2
@@ -54,14 +55,14 @@ if __name__ == "__main__":
         # Prepare paths
         path_to_img = os.path.join(TEMP_FOLDER_PATH, image_name)
         path_to_mask = os.path.join(TEMP_FOLDER_PATH, f"mask-{image_name}")
-        output_path = os.path.join(OUTPUTS_PATH, image_name)
+        #output_path = os.path.join(OUTPUTS_PATH, image_name)
 
         masked_img = cv2.imread(path_to_mask)
         masked_img = dilate_rgb_mask(masked_img, kernel_size=7)
         cv2.imwrite(path_to_mask, masked_img)
 
         # Run inpainting model        
-        os.system(f"python {PREDICT_SCRIPT_PATH} --image_path {path_to_img} --image_mask_path {path_to_mask} --model_path {UNET_MODEL_PATH} --output_file {output_path}")
+        os.system(f"python {PREDICT_SCRIPT_PATH} --input_img {path_to_img} --input_mask_glob {path_to_mask} --lama_config {LAMA_CONFIG_PATH} --lama_ckpt {LAMA_MODEL_PATH} --output_dir {OUTPUTS_PATH}")
         
         # Remove temporary files
         # os.remove(path_to_img)
