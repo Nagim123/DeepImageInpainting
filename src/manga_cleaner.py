@@ -29,7 +29,7 @@ def dilate_rgb_mask(mask, kernel_size=5):
     # Merge the dilated channels back into an RGB image
     dilated_mask = cv2.merge([dilated_b, dilated_g, dilated_r])
 
-    return dilated_mask
+    return dilated_mask[:,:,0]
 
 if __name__ == "__main__":
     # Parse command line arguments
