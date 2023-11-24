@@ -1,8 +1,26 @@
 # Manga Inpainting Application
-We used the best model - [MODEL _NAME] for manga inpainting problem.
+We used the best model - LAMA for manga inpainting problem.
 ## Installation
-download stuff
+1. Clone repository
+```console
+git clone --recurse-submodules https://github.com/Nagim123/DeepImageInpainting.git -b InpaintingPipelineLama
+```
+2. Create and activate virtual environment
+```console
+cd DeepImageInpainting
+```
+```console
+python -m env .env
+```
+```console
+.venv\Scripts\activate
+```
+3. Download models
+```console
+python src/model_downloader.py
+```
 ## How to use
-Usage stuff
-
-
+Run the following to apply manga cleaning in all images from **example** directory
+```console
+python src/manga_cleaner.py --manga_dir example/
+```
