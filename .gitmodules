@@ -1,0 +1,6 @@
+[submodule "src/comic-text-detector"]
+	path = src/comic-text-detector
+	url = https://github.com/Nagim123/comic-text-detector.git
+[submodule "src/fixed-lama-inpainter"]
+	path = src/fixed-lama-inpainter
+	url = https://github.com/Nagim123/fixed-lama-inpainter.git
