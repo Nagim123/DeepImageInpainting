@@ -14,9 +14,16 @@ OUTPUTS_PATH = os.path.join(script_path, "../outputs/")
 import cv2
 import numpy as np
 
-def dilate_rgb_mask(mask: np.array, kernel_size: int = 5) -> np.array:
+def dilate_rgb_mask(mask: np.array, kernel_size: int = 7) -> np.array:
     """
+    Dilate mask lines width in image for better performance.
+
+    Parameters:
+        mask (np.array): Link for download
+        kernel_size (int): The value of dilate. Default is 7.
     
+    Return:
+        (np.array): Image with increased lines mask width.
     """
     # Separate the channels
     b, g, r = cv2.split(mask)

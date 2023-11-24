@@ -11,7 +11,9 @@ def download_url(url: str, output_path: str) -> None:
     """
     Download file by url.
 
-
+    Parameters:
+        url (str): Link for download
+        output_path (str): Path of downloaded file.
     """
     response = requests.get(url)
     content = response.content
