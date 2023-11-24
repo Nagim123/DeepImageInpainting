@@ -15,7 +15,11 @@ python -m env .env
 ```console
 .venv\Scripts\activate
 ```
-3. Download models
+3. Install dependencies
+```console
+pip install -r requirements.txt
+```
+4. Download models
 ```console
 python src/model_downloader.py
 ```
