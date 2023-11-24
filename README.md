@@ -10,7 +10,7 @@ git clone --recurse-submodules https://github.com/Nagim123/DeepImageInpainting.g
 cd DeepImageInpainting
 ```
 ```console
-python -m env .env
+python -m venv .venv
 ```
 ```console
 .venv\Scripts\activate
