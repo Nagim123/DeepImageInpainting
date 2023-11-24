@@ -28,7 +28,7 @@ We used the best model - LAMA for manga inpainting problem.
 ## Installation
 1. Clone repository
 ```console
-git clone --recurse-submodules https://github.com/Nagim123/DeepImageInpainting.git -b InpaintingPipelineLama
+git clone --recurse-submodules https://github.com/Nagim123/DeepImageInpainting.git
 ```
 2. Create and activate virtual environment
 ```console
