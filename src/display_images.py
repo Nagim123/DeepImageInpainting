@@ -6,7 +6,15 @@ from PIL import Image, ImageTk
 
 
 class ImageDisplayApp:
-    def __init__(self, root, image_directory, mask_directory):
+    def __init__(self, root: tk.Tk, image_directory: str, mask_directory: str):
+        """
+       Initialize the ImageDisplayApp.
+
+       Parameters:
+           root (tkinter.Tk): The root Tkinter window.
+           image_directory (str): The directory containing image files.
+           mask_directory (str): The directory to store mask files.
+       """
         self.root = root
         self.image_directory = image_directory
         self.mask_directory = mask_directory
@@ -33,10 +41,25 @@ class ImageDisplayApp:
         self.show_image()
 
     def load_images(self):
+        """
+        Load a list of image files from the specified directory.
+
+        Returns:
+            list: List of image file names.
+        """
         image_list = [f for f in os.listdir(self.image_directory) if f.endswith(('.png', '.jpg', '.jpeg'))]
         return image_list
 
-    def load_mask(self, image_name):
+    def load_mask(self, image_name: str):
+        """
+        Load a mask associated with the given image name.
+
+        Parameters:
+            image_name (str): Name of the image file.
+
+        Returns:
+            numpy.ndarray: Loaded mask or None if no mask found.
+        """
         mask_name = f"mask-{image_name}"
         mask_path = os.path.join(self.mask_directory, mask_name)
         if os.path.exists(mask_path):
@@ -45,15 +68,38 @@ class ImageDisplayApp:
         else:
             return None
 
-    def apply_mask(self, image, mask):
+    def apply_mask(self, image: np.ndarray, mask: np.ndarray):
+        """
+        Apply the loaded mask to the given image.
+
+        Parameters:
+            image (numpy.ndarray): Input image.
+            mask (numpy.ndarray): Mask to be applied.
+
+        Returns:
+            numpy.ndarray: Image with applied mask.
+        """
         red_mask = np.zeros_like(image)
         red_mask[:, :, 0] = mask  # Set red channel to the mask
         return cv2.addWeighted(image, 0.75, red_mask, 1, 0)  # Combine image and red mask
 
-    def start_drawing(self, event):
+    def start_drawing(self, event: tk.Event):
+        """
+        Set the drawing flag to True when the mouse button is pressed.
+
+        Parameters:
+            event (tkinter.Event): Mouse event.
+        """
         self.drawing = True
 
-    def draw(self, event, value):
+    def draw(self, event: tk.Event, value: int):
+        """
+        Draw on the mask when the mouse is moved during drawing.
+
+        Parameters:
+            event (tkinter.Event): Mouse event.
+            value (int): Value to draw on the mask.
+        """
         if self.drawing and 0 <= event.x < self.current_image.shape[1] and 0 <= event.y < self.current_image.shape[0]:
             # Convert Tkinter coordinates to OpenCV coordinates
             x_cv = event.x
@@ -62,16 +108,31 @@ class ImageDisplayApp:
             cv2.rectangle(self.mask, (x_cv - d, y_cv - d), (x_cv + d, y_cv + d), value, -1)
             self.update_display()
 
-    def change_drawing_size(self, event):
+    def change_drawing_size(self, event: tk.Event):
+        """
+        Change the drawing size based on mouse wheel movement.
+
+        Parameters:
+            event (tkinter.Event): Mouse wheel event.
+        """
         delta = event.delta
         # Increase or decrease the drawing size based on mouse wheel movement
         self.pointer_size += int(delta / 120)
         self.pointer_size = max(1, self.pointer_size)
 
-    def stop_drawing(self, event):
+    def stop_drawing(self, event: tk.Event):
+        """
+        Set the drawing flag to False when the mouse button is released.
+
+        Parameters:
+            event (tkinter.Event): Mouse event.
+        """
         self.drawing = False
 
     def update_display(self):
+        """
+        Update the displayed image with the applied mask.
+        """
         if self.mask is not None:
             image_with_mask = self.apply_mask(self.current_image, self.mask)
             photo = ImageTk.PhotoImage(Image.fromarray(image_with_mask))
@@ -79,6 +140,9 @@ class ImageDisplayApp:
             self.photo_label.image = photo
 
     def show_image(self):
+        """
+        Show the current image with the associated mask.
+        """
         if self.current_image_index < len(self.image_list):
             image_name = self.image_list[self.current_image_index]
             image_path = os.path.join(self.image_directory, image_name)
@@ -90,6 +154,7 @@ class ImageDisplayApp:
             if self.mask is None:
                 self.mask = np.zeros((self.current_image.shape[0], self.current_image.shape[1]), dtype=np.uint8)
 
+            # Resize the image to the window size
             ratio_h = self.current_image.shape[0] / self.root.winfo_screenheight()
             ratio_w = self.current_image.shape[1] / self.root.winfo_screenwidth()
             ratio = max(ratio_h, ratio_w)
@@ -104,12 +169,24 @@ class ImageDisplayApp:
             # No more images, close the app
             self.root.destroy()
 
-    def change_image(self, event):
+    def change_image(self, event: tk.Event):
+        """
+        Change to the next image and save the current mask.
+
+        Parameters:
+            event (tkinter.Event): Key press event.
+        """
         self.save_mask(event)  # Save mask before changing image
         self.current_image_index += 1
         self.show_image()
 
-    def save_mask(self, event):
+    def save_mask(self, event: tk.Event):
+        """
+        Save the current mask associated with the current image.
+
+        Parameters:
+            event (tkinter.Event): Key press event.
+        """
         if self.mask is not None:
             self.mask = cv2.resize(self.mask, self.shape[1::-1], interpolation=cv2.INTER_NEAREST)
             image_name = self.image_list[self.current_image_index]
@@ -118,13 +195,15 @@ class ImageDisplayApp:
             cv2.imwrite(mask_path, self.mask)
 
 
-def appl(image_folder, mask_folder):
+def appl(image_folder: str, mask_folder: str):
+    """
+    Run the application with the specified image and mask folders.
+
+    Parameters:
+        image_folder (str): The directory containing image files.
+        mask_folder (str): The directory to store mask files.
+    """
     root = tk.Tk()
     root.geometry(f"{root.winfo_screenwidth()}x{root.winfo_screenheight()}")
     app = ImageDisplayApp(root, image_folder, mask_folder)
     root.mainloop()
-
-
-if __name__ == "__main__":
-    appl("C:/Users/user/PycharmProjects/DeepImageInpainting/example",
-         "C:/Users/user/PycharmProjects/DeepImageInpainting/temp")
