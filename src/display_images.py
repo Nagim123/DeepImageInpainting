@@ -30,7 +30,7 @@ class ImageDisplayApp:
         self.show_image()
 
     def load_images(self):
-        image_list = [f for f in os.listdir(self.image_directory) if f.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+        image_list = [f for f in os.listdir(self.image_directory) if f.endswith(('.png', '.jpg', '.jpeg'))]
         return image_list
 
     def load_mask(self, image_name):
@@ -55,8 +55,8 @@ class ImageDisplayApp:
     def draw(self, event):
         if self.drawing and 0 <= event.x < self.current_image.shape[1] and 0 <= event.y < self.current_image.shape[0]:
             # Convert Tkinter coordinates to OpenCV coordinates
-            x_cv = event.x
-            y_cv = event.y + 50
+            x_cv = event.x + self.offsetw
+            y_cv = event.y + self.offseth + 8
 
             cv2.rectangle(self.mask, (x_cv - 8, y_cv - 8), (x_cv + 8, y_cv + 8), 255, -1)
             self.update_display()
@@ -77,6 +77,9 @@ class ImageDisplayApp:
             image_path = os.path.join(self.image_directory, image_name)
             self.current_image = cv2.imread(image_path)
             self.current_image = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2RGB)  # Convert from BGR to RGB
+            self.offseth = max((self.current_image.shape[0] - self.root.winfo_screenheight()) // 2, 0)
+            self.offsetw = max((self.current_image.shape[1] - self.root.winfo_screenwidth()) // 2, 0)
+            print(self.offseth, self.offsetw)
 
             self.mask = self.load_mask(image_name)
             if self.mask is None:
@@ -103,6 +106,7 @@ class ImageDisplayApp:
 
 def appl(image_folder, mask_folder):
     root = tk.Tk()
+    root.geometry(f"{root.winfo_screenwidth()}x{root.winfo_screenheight()}")
     app = ImageDisplayApp(root, image_folder, mask_folder)
     root.mainloop()
 
