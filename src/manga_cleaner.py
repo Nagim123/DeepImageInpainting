@@ -11,6 +11,26 @@ SEGMENT_SCRIPT_PATH = os.path.join(script_path, "comic-text-detector/run_model.p
 PREDICT_SCRIPT_PATH = os.path.join(script_path, "predict_model.py")
 OUTPUTS_PATH = os.path.join(script_path, "../outputs/")
 
+import cv2
+import numpy as np
+
+def dilate_rgb_mask(mask, kernel_size=5):
+    # Separate the channels
+    b, g, r = cv2.split(mask)
+
+    # Create a kernel for dilation
+    kernel = np.ones((kernel_size, kernel_size), np.uint8)
+
+    # Dilate each channel independently
+    dilated_b = cv2.dilate(b, kernel, iterations=1)
+    dilated_g = cv2.dilate(g, kernel, iterations=1)
+    dilated_r = cv2.dilate(r, kernel, iterations=1)
+
+    # Merge the dilated channels back into an RGB image
+    dilated_mask = cv2.merge([dilated_b, dilated_g, dilated_r])
+
+    return dilated_mask
+
 if __name__ == "__main__":
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="Script that clean manga from symbols")
@@ -37,14 +57,18 @@ if __name__ == "__main__":
         path_to_mask = os.path.join(TEMP_FOLDER_PATH, f"mask-{image_name}")
         output_path = os.path.join(OUTPUTS_PATH, image_name)
 
+        masked_img = cv2.imread(path_to_mask)
+        masked_img = dilate_rgb_mask(masked_img, kernel_size=7)
+        cv2.imwrite(path_to_mask, masked_img)
+
         # Run inpainting model        
         os.system(f"python {PREDICT_SCRIPT_PATH} --image_path {path_to_img} --image_mask_path {path_to_mask} --model_path {UNET_MODEL_PATH} --output_file {output_path}")
         
         # Remove temporary files
-        os.remove(path_to_img)
-        os.remove(path_to_mask)
-        clean_name = image_name.split(".")[0]
-        os.remove(os.path.join(TEMP_FOLDER_PATH, f"{clean_name}.txt"))
-        os.remove(os.path.join(TEMP_FOLDER_PATH, f"line-{clean_name}.txt"))
+        # os.remove(path_to_img)
+        # os.remove(path_to_mask)
+        # clean_name = image_name.split(".")[0]
+        # os.remove(os.path.join(TEMP_FOLDER_PATH, f"{clean_name}.txt"))
+        # os.remove(os.path.join(TEMP_FOLDER_PATH, f"line-{clean_name}.txt"))
 
 
