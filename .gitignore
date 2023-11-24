@@ -7,3 +7,4 @@ src/models/*
 !src/models/.gitkeep
 .venv/*
 temp/*
+outputs/*
