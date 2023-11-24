@@ -40,7 +40,7 @@ class ImageDisplayApp:
 
         self.show_image()
 
-    def load_images(self):
+    def load_images(self) -> list:
         """
         Load a list of image files from the specified directory.
 
@@ -50,7 +50,7 @@ class ImageDisplayApp:
         image_list = [f for f in os.listdir(self.image_directory) if f.endswith(('.png', '.jpg', '.jpeg'))]
         return image_list
 
-    def load_mask(self, image_name: str):
+    def load_mask(self, image_name: str) -> np.array:
         """
         Load a mask associated with the given image name.
 
@@ -68,7 +68,7 @@ class ImageDisplayApp:
         else:
             return None
 
-    def apply_mask(self, image: np.ndarray, mask: np.ndarray):
+    def apply_mask(self, image: np.ndarray, mask: np.ndarray) -> np.array:
         """
         Apply the loaded mask to the given image.
 
@@ -83,7 +83,7 @@ class ImageDisplayApp:
         red_mask[:, :, 0] = mask  # Set red channel to the mask
         return cv2.addWeighted(image, 0.75, red_mask, 1, 0)  # Combine image and red mask
 
-    def start_drawing(self, event: tk.Event):
+    def start_drawing(self, event: tk.Event) -> None:
         """
         Set the drawing flag to True when the mouse button is pressed.
 
@@ -92,7 +92,7 @@ class ImageDisplayApp:
         """
         self.drawing = True
 
-    def draw(self, event: tk.Event, value: int):
+    def draw(self, event: tk.Event, value: int) -> None:
         """
         Draw on the mask when the mouse is moved during drawing.
 
@@ -108,7 +108,7 @@ class ImageDisplayApp:
             cv2.rectangle(self.mask, (x_cv - d, y_cv - d), (x_cv + d, y_cv + d), value, -1)
             self.update_display()
 
-    def change_drawing_size(self, event: tk.Event):
+    def change_drawing_size(self, event: tk.Event) -> None:
         """
         Change the drawing size based on mouse wheel movement.
 
@@ -120,7 +120,7 @@ class ImageDisplayApp:
         self.pointer_size += int(delta / 120)
         self.pointer_size = max(1, self.pointer_size)
 
-    def stop_drawing(self, event: tk.Event):
+    def stop_drawing(self, event: tk.Event) -> None:
         """
         Set the drawing flag to False when the mouse button is released.
 
@@ -129,7 +129,7 @@ class ImageDisplayApp:
         """
         self.drawing = False
 
-    def update_display(self):
+    def update_display(self) -> None:
         """
         Update the displayed image with the applied mask.
         """
@@ -139,7 +139,7 @@ class ImageDisplayApp:
             self.photo_label.config(image=photo)
             self.photo_label.image = photo
 
-    def show_image(self):
+    def show_image(self) -> None:
         """
         Show the current image with the associated mask.
         """
@@ -169,7 +169,7 @@ class ImageDisplayApp:
             # No more images, close the app
             self.root.destroy()
 
-    def change_image(self, event: tk.Event):
+    def change_image(self, event: tk.Event) -> None:
         """
         Change to the next image and save the current mask.
 
@@ -180,7 +180,7 @@ class ImageDisplayApp:
         self.current_image_index += 1
         self.show_image()
 
-    def save_mask(self, event: tk.Event):
+    def save_mask(self, event: tk.Event) -> None:
         """
         Save the current mask associated with the current image.
 
@@ -195,7 +195,7 @@ class ImageDisplayApp:
             cv2.imwrite(mask_path, self.mask)
 
 
-def appl(image_folder: str, mask_folder: str):
+def appl(image_folder: str, mask_folder: str) -> None:
     """
     Run the application with the specified image and mask folders.
 
