@@ -24,7 +24,7 @@ pip install -r requirements.txt
 python src/model_downloader.py
 ```
 ## How to use
-Run the following to apply manga cleaning in all images from **example** directory
+Run the following command to apply manga cleaning in all images from **example** directory
 ```console
 python src/manga_cleaner.py --manga_dir example/
 ```
