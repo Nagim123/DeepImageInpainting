@@ -26,6 +26,8 @@ You can try our old models on collab.
 # Manga Inpainting Application
 We used the best model - LAMA for manga inpainting problem.
 ## Installation
+Repository was tested only on Windows, therefore, may not work on Linux.
+
 1. Clone repository
 ```console
 git clone --recurse-submodules https://github.com/Nagim123/DeepImageInpainting.git
